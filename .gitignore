@@ -1,0 +1,19 @@
+# Compiled binary (matches `go build -o jeka .`)
+/jeka
+jeka-bin
+
+# Go build / test artifacts
+*.exe
+*.test
+*.out
+/dist/
+
+# Editor / OS cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Local secrets — never commit API keys
+.env
+/main
