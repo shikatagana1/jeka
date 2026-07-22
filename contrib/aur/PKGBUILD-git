@@ -1,0 +1,40 @@
+# Maintainer: shikatagana1 <lukaturkadze34@gmail.com>
+pkgname=jeka-git
+pkgver=r1.72faf60
+pkgrel=1
+pkgdesc="Reverse-DNS lookup CLI: current PTR + passive-DNS history for an IP or a file of IPs (git)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/shikatagana1/jeka"
+license=('MIT')
+makedepends=('go' 'git')
+provides=('jeka')
+conflicts=('jeka')
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd jeka
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd jeka
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+	go build -o jeka .
+}
+
+check() {
+	cd jeka
+	go test ./...
+}
+
+package() {
+	cd jeka
+	install -Dm755 jeka "$pkgdir/usr/bin/jeka"
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/jeka/LICENSE"
+	install -Dm644 README.md "$pkgdir/usr/share/doc/jeka/README.md"
+}
